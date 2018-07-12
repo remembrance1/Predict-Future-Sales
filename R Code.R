@@ -160,4 +160,16 @@ ggplot(MonthlySales, aes(x=Month, y= ItemSales, fill=Quarter)) +
   labs(title = "Monthly Total Sales", x="Month", y="Item Sales") +
   theme_bw()
 
+##------Top 10 returned items------## Those with -ve under the item_cnt_sale
+SalesData$Returns <- ifelse((SalesData$item_cnt_day <  0), SalesData$item_cnt_day,0) #if < 0, else >0, return as 0
+
+#calculate total number of returns by item
+TReturn <- group_by(SalesData, item_id, item_name)
+TReturn <- summarise(TReturn, TotalReturns = sum(Returns))
+TReturn <- as.data.frame(TReturn)
+TReturn <- arrange(TReturn, TotalReturns)
+TReturn <- head(TReturn, 10)
+
+#plot top 10 returned items
+
 #Model Building - XGBoost
